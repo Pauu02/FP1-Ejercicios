@@ -1,17 +1,15 @@
 # Escriba aquí su código
 def precio_kilos(precios, fruta, kilos):
-    for fruit, precio in precios.items():
-        if (fruta not in precios) or (fruit == fruta and precios[fruit] == -1):
-            return None
-        else:
-           return  precios[fruit] * kilos
+    if (fruta not in precios) or (fruta in precios and precios[fruta] == -1):
+        return None
+    else:
+        coste = kilos * precios[fruta]
+        return coste
 
 def mensaje_precio_kilos(precios, fruta, kilos):
-    if precio_kilos(precios, fruta, kilos) is None:
-        return (f"La fruta '{fruta}' no está disponible.")
-    else:
-        coste = precio_kilos(precios, fruta, kilos)
-        return (f"{kilos} kilos de '{fruta}' cuestan {coste:.2f} euros")
+    if (fruta not in precios) or (fruta in precios and precios[fruta] == -1):
+        return f"La fruta '{fruta}' no está disponible."
+    return f"{kilos} kilos de '{fruta}' cuestan {coste} euros"
 
 if __name__ == "__main__":
     precios_frutas = {
