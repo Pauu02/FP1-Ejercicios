@@ -3,32 +3,21 @@ from utilities import create_db, show
 
 
 def cargar_platos(fichero):
-    db = sqlite3.connect("menu.db")
-    cursor = db.cursor()
-    with open(fichero, 'r') as fr:
-        lineas = fr.readlines()
-
-    cat_incorrectas = []
-    cat_correctas = []
-
-    for linea in lineas:
-        categoria, plato, precio = linea.strip().split(';')
-
-        try:
-            cursor.execute("INSERT INTO platos(nombre, precio, \
-            categoria_id) VALUES(?, ?, (SELECT id FROM categorias WHERE\
-            nombre = ?))", (plato, precio, categoria))
-        except sqlite3.IntegrityError:
-            cat_incorrectas.append((categoria, plato))
+    with open(fichero, 'r') as fi, sqlite3.connect('menu.db') as db:
+        caquita = []
+        cursor = db.cursor()
+        for line in fi:
+            platito = line.strip().split(",")
+            cursor.execute("SELECT * FROM categorias WHERE nombre = ?", (platito[0],)) 
+            result = cursor.fetchone()
+            if not result:
+                caquita.append((platito[0], platito[1]))
+            else:
+                cursor.execute("INSERT INTO platos VALUES (?, ?, ?)", (platito[1],platito[2], result[0][0]))
+        if caquita == []:
+            return True
         else:
-            cat_correctas.append((categoria, plato, precio))
-
-    db.commit()
-    db.close()
-    if cat_incorrectas:
-        return cat_incorrectas
-    else:
-        return True
+            return caquita
 
 
 if __name__ == "__main__":
