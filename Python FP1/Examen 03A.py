@@ -1,4 +1,4 @@
-mport sqlite3
+import sqlite3
 from utilities import create_db, show
 
 
